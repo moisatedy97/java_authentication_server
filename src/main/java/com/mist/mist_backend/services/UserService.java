@@ -8,6 +8,7 @@ import com.mist.mist_backend.database.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +28,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
+    @Value("${application.security.otp.longevity}")
+    private long otpLongevity;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final OtpRepository otpRepository;
@@ -46,7 +49,7 @@ public class UserService implements UserDetailsService {
                 .otpCode(passwordEncoder.encode(code))
                 .user(user)
                 .createdAt(System.currentTimeMillis())
-                .expiresAt(System.currentTimeMillis() + (AuthenticationConstants.OTP_LONGEVITY * 1000))
+                .expiresAt(System.currentTimeMillis() + (otpLongevity * 1000))
                 .build();
 
         user.setOtp(otp);
@@ -82,21 +85,6 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Function that retrives the user from database
-     * @param email
-     * @return
-     */
-    public User getUser(String email) {
-        Optional<User> dbUser = userRepository.findUserByEmail(email);
-
-        if (dbUser.isPresent()) {
-            return dbUser.get();
-        } else {
-            throw new BadCredentialsException("User not found!");
-        }
-    }
-
-    /**
      * Function that renews the otp of the found User
      *
      * @param user the user that we want to renew its otp
@@ -110,7 +98,7 @@ public class UserService implements UserDetailsService {
             Otp currentOtp = dbOtp.get();
             System.out.println(code);
             currentOtp.setCreatedAt(System.currentTimeMillis());
-            currentOtp.setExpiresAt(System.currentTimeMillis() + (AuthenticationConstants.OTP_LONGEVITY * 1000));
+            currentOtp.setExpiresAt(System.currentTimeMillis() + (otpLongevity * 1000));
             currentOtp.setOtpCode(passwordEncoder.encode(code));
 
             String recipient = user.getEmail();

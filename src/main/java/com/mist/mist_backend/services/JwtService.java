@@ -24,6 +24,10 @@ public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")
     private String jwtSecretKey;
+    @Value("${application.security.jwt.longevity}")
+    private long jwtTokenLongevity;
+    @Value("${application.security.jwt.refresh-token.longevity}")
+    private long jwtRefreshTokenLongevity;
 
     /**
      * Function that generate a jwt token without extra claims
@@ -43,7 +47,7 @@ public class JwtService {
      * @return the jwt token
      */
     public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, AuthenticationConstants.JWT_TOKEN_LONGEVITY * 1000);
+        return buildToken(extraClaims, userDetails, jwtTokenLongevity * 1000);
     }
 
     /**
@@ -53,7 +57,7 @@ public class JwtService {
      * @return the jwt refresh token
      */
     public String generateJwtRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, AuthenticationConstants.JWT_REFRESH_TOKEN_LONGEVITY * 1000);
+        return buildToken(new HashMap<>(), userDetails, jwtRefreshTokenLongevity * 1000);
     }
 
     /**
