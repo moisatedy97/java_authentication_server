@@ -1,5 +1,5 @@
 # Default ignored files
+src/main/resources/application-dev.properties
 /shelf/
 /workspace.xml
 /target
-/src/main/resources/application-dev.properties
