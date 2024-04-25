@@ -27,43 +27,43 @@ public class JwtService {
     private long jwtRefreshTokenLongevity;
 
     /**
-     * Function that generate a jwt token without extra claims
+     * Generates a JWT token without extra claims.
      *
-     * @param userDetails the user details that we want to add
-     * @return the jwt token
+     * @param userDetails the user details to include in the token
+     * @return the generated JWT token
      */
     public String generateJwtToken(UserDetails userDetails) {
         return generateJwtToken(new HashMap<>(), userDetails);
     }
 
     /**
-     * Function that generate a jwt token with extra claims
+     * Generates a JWT token with extra claims.
      *
-     * @param extraClaims the extra claims that we want to add
-     * @param userDetails the user details that we want to add
-     * @return the jwt token
+     * @param extraClaims additional claims to include in the token
+     * @param userDetails the user details to include in the token
+     * @return the generated JWT token
      */
     public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, jwtTokenLongevity * 1000);
     }
 
     /**
-     * Function that generate a jwt refresh token
+     * Generates a JWT refresh token.
      *
-     * @param userDetails the user details that we want to add
-     * @return the jwt refresh token
+     * @param userDetails the user details to include in the refresh token
+     * @return the generated JWT refresh token
      */
     public String generateJwtRefreshToken(UserDetails userDetails) {
         return buildToken(new HashMap<>(), userDetails, jwtRefreshTokenLongevity * 1000);
     }
 
     /**
-     * Function that builds a jwt token
+     * Builds a JWT token with specified claims, user details, and expiration.
      *
-     * @param extraClaims the extra claims that we want to add
-     * @param userDetails the user details that we want to add
-     * @param expiration  the token expiration time
-     * @return the jwt token
+     * @param extraClaims  additional claims to include in the token
+     * @param userDetails  the user details to include in the token
+     * @param expiration   the expiration time of the token in milliseconds
+     * @return the generated JWT token
      */
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts
@@ -77,11 +77,11 @@ public class JwtService {
     }
 
     /**
-     * Function that checks if the token is valid by the subject, in out case the user email
+     * Validates a JWT token by comparing the subject with user details and checking if the token is expired.
      *
-     * @param token       the jwt token
-     * @param userDetails the user details
-     * @return true if the token is valid, false otherwise
+     * @param token       the JWT token to validate
+     * @param userDetails the user details to compare with the token subject
+     * @return true if the token is valid and not expired, false otherwise
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userEmail = extractJwtSubject(token);
@@ -90,52 +90,52 @@ public class JwtService {
     }
 
     /**
-     * Function that checks if the token is expired
+     * Checks if a JWT token is expired.
      *
-     * @param token the jwt token
-     * @return true if the token in expired, false otherwise
+     * @param token the JWT token to check
+     * @return true if the token is expired, false otherwise
      */
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     /**
-     * Function that checks if the jwt token is present into the header
+     * Checks if a JWT token is present in the request header.
      *
-     * @param header the request header
-     * @return true if token is present, false otherwise
+     * @param header the request header containing the token
+     * @return true if a JWT token is present, false otherwise
      */
     public boolean isTokenPresent(String header) {
         return header != null && header.startsWith("Bearer ");
     }
 
     /**
-     * Function that extract the subject claim, user email in out case
+     * Extracts the subject (user email) from a JWT token.
      *
-     * @param token the jwt token
-     * @return the jwt subject, in out case the user email
+     * @param token the JWT token from which to extract the subject
+     * @return the subject (user email) of the JWT token
      */
     public String extractJwtSubject(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     /**
-     * Function that extract the expiration date
+     * Extracts the expiration date from a JWT token.
      *
-     * @param token the jwt token
-     * @return the jwt expiration date
+     * @param token the JWT token from which to extract the expiration date
+     * @return the expiration date of the JWT token
      */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
     /**
-     * Function that extract a claim of type T
+     * Extracts a specific claim from a JWT token using a claims resolver function.
      *
-     * @param token          the jwt token
-     * @param claimsResolver functional function that takes in input a Claims object and generates T object
-     * @param <T>            the type of object that we want to return
-     * @return the T object from the functional function
+     * @param token          the JWT token from which to extract the claim
+     * @param claimsResolver the function to apply to the claims to extract the desired information
+     * @param <T>            the type of the extracted claim
+     * @return the extracted claim
      */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -144,10 +144,10 @@ public class JwtService {
     }
 
     /**
-     * Function that get all the jwt token claims
+     * Extracts all claims from a JWT token.
      *
-     * @param token is the jwt token the we parse
-     * @return the jwt claims
+     * @param token the JWT token from which to extract the claims
+     * @return the claims of the JWT token
      */
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -159,9 +159,9 @@ public class JwtService {
     }
 
     /**
-     * Function that gets and decodes the jwt secret key
+     * Retrieves and decodes the JWT secret key.
      *
-     * @return the key
+     * @return the decoded secret key used for signing the JWT
      */
     private Key getSignInKey() {
         String jwtSecretKey = "a578ca941109363dff29882af80d0a4d28754a106ac96dc65c36092399175844";

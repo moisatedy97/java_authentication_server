@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * Otp authentication logic
+ * Provides the logic for OTP (One-Time Password) based authentication.
+ * This class implements {@link AuthenticationProvider} to provide a custom authentication method
+ * that uses OTPs for verifying user identity.
  */
 @Component
 @RequiredArgsConstructor
@@ -30,10 +32,14 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
     private final UserRepository userRepository;
 
     /**
-     * Function that decides to authenticate the user
+     * Authenticates a user based on OTP credentials.
+     * This method retrieves user details from the username provided in the authentication object,
+     * checks if the OTP is valid and matches the provided credentials, and then returns a fully authenticated
+     * {@link OtpAuthentication} object if successful.
      *
-     * @param authentication the authentication contract
-     * @return the authentication contract
+     * @param authentication the authentication request object containing the principal and credentials
+     * @return a fully authenticated object including authorities
+     * @throws AuthenticationException if authentication fails due to invalid credentials or other authentication issues
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -63,10 +69,11 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
     }
 
     /**
-     * Function that checks if the authentication is supported by our logic
+     * Determines if this AuthenticationProvider supports a given Authentication class.
+     * This provider only supports {@link OtpAuthentication} class.
      *
-     * @param authentication the authentication class
-     * @return true if the authentication is supported, false otherwise
+     * @param authentication the type of authentication
+     * @return true if the authentication type is supported by this provider, false otherwise
      */
     @Override
     public boolean supports(Class<?> authentication) {

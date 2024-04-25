@@ -34,6 +34,12 @@ public class AuthenticationController {
     private final JwtService jwtService;
     private final UserService userService;
 
+    /**
+     * Handles the login process for a user.
+     * 
+     * @param loginUserDto the data transfer object containing login credentials
+     * @return ResponseEntity containing the authentication response with tokens or error status
+     */
     @GetMapping(value = "/login")
     public ResponseEntity<AuthenticationRes> login(@Valid LoginUserDto loginUserDto) {
         Authentication authentication = authenticationService.authenticate(
@@ -74,6 +80,12 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Refreshes the JWT access token using a valid refresh token.
+     * 
+     * @param request the HTTP request containing the Authorization header with the refresh token
+     * @return ResponseEntity containing the new access token or error status
+     */
     @PostMapping("/refresh")
     public ResponseEntity<AuthenticationRes> refresh(HttpServletRequest request) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -109,6 +121,11 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Registers a new user with the provided user details.
+     * 
+     * @param registerUserDto the data transfer object containing user registration details
+     */
     @PostMapping("/register")
     public void register(@Valid RegisterUserDto registerUserDto) {
         Role role;
@@ -132,6 +149,12 @@ public class AuthenticationController {
         userService.register(user);
     }
 
+    /**
+     * Logs out a user by revoking all tokens and clearing the security context.
+     * 
+     * @param request the HTTP request containing the Authorization header with the access token
+     * @return ResponseEntity indicating the result of the logout operation
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         SecurityContextLogoutHandler contextLogoutHandler = new SecurityContextLogoutHandler();

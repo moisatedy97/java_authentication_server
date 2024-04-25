@@ -20,10 +20,11 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Function that authenticates the user
+     * Authenticates a user based on their credentials. This method supports both username-password
+     * and OTP-based authentication.
      *
-     * @param user the user to authenticate
-     * @return the authentication contract
+     * @param user the user to authenticate, must not be null
+     * @return the authenticated user's details as an Authentication object if authentication is successful, null otherwise
      */
     public Authentication authenticate(@NotNull User user) {
         if (user.getOtp().getOtpCode() == null && !user.getPassword().isEmpty()) {
@@ -42,10 +43,11 @@ public class AuthenticationService {
     }
 
     /**
-     * Function that save the user token to the database
+     * Saves a JWT token for a user in the database. This token can be used for subsequent
+     * authorization checks.
      *
-     * @param user     the user
-     * @param jwtToken the token
+     * @param user     the user for whom the token is being saved
+     * @param jwtToken the JWT token to save
      */
     public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
@@ -60,9 +62,10 @@ public class AuthenticationService {
     }
 
     /**
-     * Function that revokes all user tokens
+     * Revokes all valid tokens for a user. This is typically used when a user logs out or when
+     * their tokens need to be refreshed for security reasons.
      *
-     * @param user the user
+     * @param user the user whose tokens are to be revoked
      */
     public void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());

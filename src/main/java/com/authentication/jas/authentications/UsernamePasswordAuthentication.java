@@ -6,29 +6,31 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
- * Class that represents the authentication with username and password,
- * in out case email and password
+ * Extends {@link UsernamePasswordAuthenticationToken} to provide a custom authentication object
+ * that primarily uses email and password for authentication purposes.
  */
 public class UsernamePasswordAuthentication extends UsernamePasswordAuthenticationToken {
 
     /**
-     * Constructor of the authentication method with username and password
-     * This constructor will not authenticate the principal because it doesn't have the granted authorities
+     * Constructs a new {@code UsernamePasswordAuthentication} object with the specified principal and credentials.
+     * This constructor is typically used prior to authentication and does not include authorities, 
+     * meaning the created authentication token is not yet authenticated.
      *
-     * @param principal   the principal
-     * @param credentials the credentials, in our case none
+     * @param principal   the identity of the principal being authenticated
+     * @param credentials the credentials that prove the principal is correct, typically a password
      */
     public UsernamePasswordAuthentication(Object principal, Object credentials) {
         super(principal, credentials);
     }
 
     /**
-     * Constructor of the authentication method with username and password
-     * This constructor will authenticate the principal
+     * Constructs a new {@code UsernamePasswordAuthentication} object with the specified principal, credentials,
+     * and authorities. This constructor should be used when the principal has been authenticated and the authorities
+     * are known.
      *
-     * @param principal   the principal
-     * @param credentials the credentials, in our case none
-     * @param authorities the granted authorities, in out case the user roles
+     * @param principal   the authenticated principal or the subject of the token
+     * @param credentials the credentials confirming the principal's identity
+     * @param authorities the authorities granted to the principal, typically roles or permissions
      */
     public UsernamePasswordAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(principal, credentials, authorities);

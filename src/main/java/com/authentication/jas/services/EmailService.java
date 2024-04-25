@@ -6,7 +6,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 /**
- * Class that contains email actions
+ * Service class responsible for handling email operations.
+ * Utilizes {@link JavaMailSender} to send emails.
  */
 @Service
 @RequiredArgsConstructor
@@ -15,11 +16,11 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     /**
-     * Function that send an email
+     * Sends an email to a specified recipient with a given subject and body.
      *
-     * @param to      the recipient
-     * @param subject the email subject
-     * @param body    the email body
+     * @param to      the email address of the recipient
+     * @param subject the subject line of the email
+     * @param body    the main content of the email
      */
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

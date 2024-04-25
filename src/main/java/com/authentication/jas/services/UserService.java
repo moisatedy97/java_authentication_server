@@ -32,11 +32,11 @@ public class UserService implements UserDetailsService {
     private final OtpService otpService;
     private final EmailService emailService;
 
-
     /**
-     * Function that creates/registers a User into the database
+     * Registers a new user in the database and sends an OTP to the user's email.
+     * The password and OTP code are encoded before storage.
      *
-     * @param user the user that we want to create
+     * @param user the user to be registered
      */
     public void register(@NotNull User user) {
         String code = otpService.generateOtp();
@@ -56,8 +56,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Function that edits the user personal data
-     * @param user the new user data
+     * Updates the personal data of an existing user in the database.
+     * Only non-null fields in the input user object are updated.
+     *
+     * @param user the user with updated data
      */
     public void edit(@NotNull User user) {
         Optional<User> dbUser = userRepository.findUserByEmail(user.getEmail());
@@ -81,9 +83,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Function that renews the otp of the found User
+     * Renews the OTP for a user and sends a new OTP via email.
+     * The new OTP is generated, encoded, and updated in the database.
      *
-     * @param user the user that we want to renew its otp
+     * @param user the user whose OTP needs to be renewed
      */
     public void renewUserOtp(User user) {
         String code = otpService.generateOtp();
@@ -109,10 +112,12 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Function that loads the user by email from the database
+     * Loads a user's details by their email address.
+     * Throws UsernameNotFoundException if the user is not found.
      *
-     * @param username the username of the user details
-     * @return the user details found in the database
+     * @param username the email of the user to load
+     * @return UserDetails of the found user
+     * @throws UsernameNotFoundException if no user is found with the given email
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

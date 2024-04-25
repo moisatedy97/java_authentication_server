@@ -19,7 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * Custom jwt authentication filter class
+ * Custom JWT authentication filter class that extends {@link OncePerRequestFilter}.
+ * This filter intercepts each request to validate JWT tokens and authenticate users based on the token's validity.
  */
 @Component
 @RequiredArgsConstructor
@@ -30,11 +31,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserService userService;
 
     /**
-     * Function that creates an additional filter that deal with the jwt authentication
+     * Processes each HTTP request to authenticate users based on JWT tokens.
+     * It extracts the JWT token from the Authorization header, validates it, and sets the authentication in the security context.
+     * If the token is invalid, it sets the HTTP response status to 401 Unauthorized.
      *
-     * @param request     the http request
-     * @param response    the http response
+     * @param request     the HTTP request
+     * @param response    the HTTP response
      * @param filterChain the filter chain
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doFilterInternal(
@@ -78,10 +83,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Configures the filter not to be triggered on request for the provided path/s
+     * Determines whether the filter should be applied based on the request path.
+     * This implementation skips filtering for login and registration paths.
      *
-     * @param request the http request
-     * @return true if the path is /login, false otherwise
+     * @param request the HTTP request
+     * @return true if the filter should not be applied (i.e., the path is /auth/login or /auth/register), false otherwise
+     * @throws ServletException if a servlet-specific error occurs
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

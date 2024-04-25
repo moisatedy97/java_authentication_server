@@ -13,7 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * Username/password authentication logic
+ * Provides authentication logic for username and password based authentication.
+ * This class implements {@link AuthenticationProvider} to provide a custom authentication method
+ * that uses username and password for verifying user identity.
  */
 @Component
 @RequiredArgsConstructor
@@ -23,10 +25,14 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Function that decides to authenticate the user
+     * Authenticates a user based on username and password credentials.
+     * This method retrieves user details from the username provided in the authentication object,
+     * checks if the password is valid and matches the stored password, and then returns a fully authenticated
+     * {@link UsernamePasswordAuthentication} object if successful.
      *
-     * @param authentication the authentication contract
-     * @return the authentication contract
+     * @param authentication the authentication request object containing the principal and credentials
+     * @return a fully authenticated object including authorities
+     * @throws AuthenticationException if authentication fails due to invalid credentials or other authentication issues
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -47,10 +53,11 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     }
 
     /**
-     * Function that checks if the authentication is supported by our logic
+     * Determines if the provided authentication type is supported by this provider.
+     * This implementation specifically supports {@link UsernamePasswordAuthentication}.
      *
-     * @param authentication the authentication class
-     * @return true if the authentication is supported, false otherwise
+     * @param authentication the class of the authentication request
+     * @return true if the authentication type is supported, false otherwise
      */
     @Override
     public boolean supports(Class<?> authentication) {

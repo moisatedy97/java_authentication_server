@@ -15,6 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebApplicationConfig {
 
+    /**
+     * Configures and builds the {@link AuthenticationManager} with specific authentication providers.
+     * 
+     * @param http the {@link HttpSecurity} used to get the shared {@link AuthenticationManagerBuilder}
+     * @param usernamePasswordAuthenticationProvider the provider for username and password authentication
+     * @param otpAuthenticationProvider the provider for OTP-based authentication
+     * @return the fully configured {@link AuthenticationManager}
+     * @throws Exception if there is an issue configuring the authentication manager
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             HttpSecurity http,
@@ -30,6 +39,11 @@ public class WebApplicationConfig {
         return authenticationManagerBuilder.build();
     }
 
+    /**
+     * Creates a {@link PasswordEncoder} that uses the BCrypt strong hashing function.
+     * 
+     * @return the {@link PasswordEncoder} instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

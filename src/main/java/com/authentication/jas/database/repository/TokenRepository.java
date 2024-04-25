@@ -8,15 +8,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Token repository to access the database
+ * Interface for the repository handling Token entities.
+ * This repository provides an abstraction layer to perform various operations on Token data in the database.
  */
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
     /**
-     * Function that retrieves all the valid token of a specific user
+     * Retrieves a list of all valid tokens associated with a specific user.
+     * A token is considered valid if it is neither expired nor revoked.
      *
-     * @param userId the user id
-     * @return the token list
+     * @param userId the unique identifier of the user whose tokens are to be retrieved
+     * @return a list of valid Token entities
      */
     @Query(value = """
             select token from Token token inner join User user\s
@@ -26,10 +28,10 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
     List<Token> findAllValidTokenByUser(Integer userId);
 
     /**
-     * Function that finds a specific token
+     * Finds a specific token by its token string.
      *
-     * @param token the token
-     * @return the retrieved token
+     * @param token the token string to search for
+     * @return an Optional containing the Token if found, otherwise an empty Optional
      */
     Optional<Token> findByToken(String token);
 }

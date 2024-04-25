@@ -20,6 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+/**
+ * Controller for handling various demo operations.
+ */
 @RestController
 @RequiredArgsConstructor
 public class DemoController {
@@ -29,11 +32,20 @@ public class DemoController {
     private final UserRepository userRepository;
     private final UserService userService;
 
+    /**
+     * Endpoint to retrieve the current version of the application.
+     * @return The current version as a string.
+     */
     @GetMapping("/ver")
     public String ver() {
         return version;
     }
 
+    /**
+     * Endpoint to retrieve user details based on the provided email.
+     * @param getUserDto Data transfer object containing the email of the user to be retrieved.
+     * @return ResponseEntity containing the user details or an error message if not found.
+     */
     @GetMapping("/user")
     public ResponseEntity<SendUserDto> user(@Valid GetUserDto getUserDto) {
         try {
@@ -60,6 +72,11 @@ public class DemoController {
         }
     }
 
+    /**
+     * Endpoint to edit user details based on the authenticated user's email.
+     * @param editUserDto Data transfer object containing the new details of the user.
+     * @param authentication Authentication object containing the current user's details.
+     */
     @GetMapping("/edit")
     public void edit(@Valid EditUserDto editUserDto, Authentication authentication) {
 
@@ -74,6 +91,9 @@ public class DemoController {
         userService.edit(user);
     }
 
+    /**
+     * Endpoint to check the validity of the current user's token.
+     */
     @GetMapping("/check")
     public void checkToken() {}
 }
